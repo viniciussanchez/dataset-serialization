@@ -188,7 +188,7 @@ begin
             Result.Add(ADataSet.Fields[0].AsBoolean);
           TFieldType.ftInteger, TFieldType.ftSmallint, TFieldType.ftShortint:
             Result.Add(ADataSet.Fields[0].AsInteger);
-          TFieldType.ftLongWord, TFieldType.ftAutoInc, TFieldType.ftString, TFieldType.ftWideString, TFieldType.ftMemo, TFieldType.ftWideMemo, TFieldType.ftGuid:
+          TFieldType.ftLongWord, TFieldType.ftAutoInc, TFieldType.ftString, TFieldType.ftWideString, TFieldType.ftWideMemo, TFieldType.ftGuid:
             Result.Add(ADataSet.Fields[0].AsWideString);
           TFieldType.ftLargeint:
             Result.Add(ADataSet.Fields[0].AsLargeInt);
@@ -231,7 +231,7 @@ begin
             end;
           TFieldType.ftFMTBcd, TFieldType.ftBCD:
             Result.Add(BcdToDouble(ADataSet.Fields[0].AsBcd));
-          TFieldType.ftGraphic, TFieldType.ftBlob, TFieldType.ftOraBlob, TFieldType.ftStream:
+          TFieldType.ftGraphic, TFieldType.ftBlob, TFieldType.ftMemo, TFieldType.ftOraBlob, TFieldType.ftStream:
             begin
               if IsEncodeBlob then
                 Result.Add(EncodingBlobField(ADataSet.Fields[0]))
@@ -305,7 +305,7 @@ begin
           else
             Result.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}(LKey, TJSONString.Create(FormatFloat(TDataSetSerializeConfig.GetInstance.Export.FormatFloat, LField.AsFloat)));
         end;
-      TFieldType.ftString, TFieldType.ftWideString, TFieldType.ftMemo, TFieldType.ftWideMemo, TFieldType.ftGuid, TFieldType.ftFixedChar, TFieldType.ftFixedWideChar:
+      TFieldType.ftString, TFieldType.ftWideString, TFieldType.ftWideMemo, TFieldType.ftGuid, TFieldType.ftFixedChar, TFieldType.ftFixedWideChar:
         begin
           LStringValue := Trim(LField.AsWideString);
           if (LStringValue.StartsWith('{') and LStringValue.EndsWith('}')) or (LStringValue.StartsWith('[') and LStringValue.EndsWith(']')) then
@@ -361,7 +361,7 @@ begin
           Result.AddPair(LKey, DataSetToJSONArray(LNestedDataSet, False, AValue));
         end;
       {$ENDIF}
-      TFieldType.ftGraphic, TFieldType.ftBlob, TFieldType.ftOraBlob{$IF NOT DEFINED(FPC)}, TFieldType.ftStream{$ENDIF}:
+      TFieldType.ftGraphic, TFieldType.ftBlob, TFieldType.ftMemo, TFieldType.ftOraBlob{$IF NOT DEFINED(FPC)}, TFieldType.ftStream{$ENDIF}:
         Result.{$IF DEFINED(FPC)}Add{$ELSE}AddPair{$ENDIF}(LKey, TJSONString.Create(IfThen(FEncodeBase64Blob, EncodingBlobField(LField), LField.AsString)));
       TFieldType.ftVarBytes:
         begin
